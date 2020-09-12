@@ -8,6 +8,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     rating = models.PositiveIntegerField(validators=[MaxValueValidator(5)], null=True, blank=True)
     date_added = models.DateField(auto_now_add=True)
+    copies_sold = models.PositiveIntegerField()
     on_sale = models.BooleanField(default=False)
     image_url = models.URLField(max_length=1024, null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
