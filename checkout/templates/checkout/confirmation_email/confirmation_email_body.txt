@@ -1,0 +1,20 @@
+Hello {{ order.user_profile.name }}!
+
+This is a confirmation email for your order at (Store). Your order information is below:
+
+Order ID: {{ order.order_id }}
+Order Date: {{ order.date }}
+Total: ${{ order.total }}
+
+Below you'll find both the activation key for your product as well as a download link(fake):
+
+Activation Key: (key)
+Click to download.
+
+If you have any questions, feel free to contact us at (store email).
+
+Thank you for your purchase!
+
+Sincerely,
+
+Store
