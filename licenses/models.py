@@ -27,3 +27,5 @@ class License(models.Model):
 def create_license(sender, instance, created, **kwargs):
     if created:
         License.objects.create(instace=Order)
+
+    instance.License.save()
