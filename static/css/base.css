@@ -1,0 +1,31 @@
+/* header */
+.svg-logo {
+    display: inline-block;
+    height: 1.5rem;
+}
+
+.bg-header {
+    background: rgba(44,194,111,0.5);
+    background: linear-gradient(90deg, rgba(44,194,111,0.5) 0%, rgba(1,105,90,0.5) 100%);
+}
+
+.header-nav .nav-link {
+    color: #212529;
+}
+
+/* pages */
+.title-image {
+    width: 100%;
+}
+
+/* footer */
+.bg-footer {
+    background: rgba(44,194,111,0.5);
+    background: linear-gradient(90deg, rgba(1,105,90,0.5) 0%, rgba(44,194,111,0.5) 100%);
+}
+
+.social-link {
+    display: inline-block;
+    font-size: 1.5rem;
+    color: #212529;
+}
