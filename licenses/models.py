@@ -4,10 +4,12 @@ from django.dispatch import receiver
 
 from products.models import Product
 from checkout.models import Order
+from profiles.models import UserProfile
 
 import uuid
 
 class License(models.Model):
+    user = models.ForeignKey(UserProfile, null=False, blank=False, on_delete=models.SET_NULL)
     key = models.CharField(max_length=254)
     product = models.ForeignKey(Product, null=False, blank=False, on_delete=models.SET_NULL)
     date_acquired = models.DateTimeField(auto_now_add=True)
@@ -22,8 +24,3 @@ class License(models.Model):
 
     def __str__(self):
         return self.key
-
-@receiver(post_save, sender=Order)
-def create_license(sender, instance, created, **kwargs):
-    if created:
-        License.objects.create(instace=Order)

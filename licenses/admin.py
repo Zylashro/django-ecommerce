@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import License
+
+class LicenseInline(admin.StackedInline):
+    model = License
+
+admin.site.register(License, LicenseInline)
