@@ -1,11 +1,12 @@
 from django.contrib import admin
 
 from .models import UserProfile
-from licenses.admin import LicenseInline
+from licenses.models import License
+
+class LicenseInline(admin.StackedInline):
+    model = License
 
 class UserProfileAdmin(admin.ModelAdmin):
-    inlines = [
-        LicenseInline,
-    ]
+    inlines = [LicenseInline,]
 
 admin.site.register(UserProfile, UserProfileAdmin)
