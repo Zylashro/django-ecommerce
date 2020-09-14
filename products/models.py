@@ -6,7 +6,7 @@ class Product(models.Model):
     name = models.CharField(max_length=254)
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
-    rating = models.DecimalField(max_digits=1, decimal_places=2, null=True, blank=True)
+    rating = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
     date_added = models.DateField(auto_now_add=True)
     copies_sold = models.PositiveIntegerField()
     on_sale = models.BooleanField(default=False)
