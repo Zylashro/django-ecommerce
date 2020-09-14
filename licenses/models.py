@@ -9,9 +9,9 @@ from profiles.models import UserProfile
 import uuid
 
 class License(models.Model):
-    user = models.ForeignKey(UserProfile, null=False, blank=False, on_delete=models.SET_NULL)
+    user = models.ForeignKey(UserProfile, null=False, blank=False, on_delete=models.CASCADE)
     key = models.CharField(max_length=254)
-    product = models.ForeignKey(Product, null=False, blank=False, on_delete=models.SET_NULL)
+    product = models.ForeignKey(Product, null=False, blank=False, on_delete=models.CASCADE)
     date_acquired = models.DateTimeField(auto_now_add=True)
 
     def _generate_license_key(self):
