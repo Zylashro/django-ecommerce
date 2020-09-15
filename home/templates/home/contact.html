@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<img src="https://picsum.photos/id/1/1366/300" class="img-fluid title-image" alt="contact">
+<div class="container h-100">
+    <h1 class="display-3 my-3">Contact</h1>
+    <p class="lead">For any product or purchase related problem best and fastest way is <a href="{% url 'support' %}">Customer service</a></p>
+    <h2 class="h3">Address for written correspondence</h2>
+    <p>Some nice street 123<br>
+    12345 Beautiful town<br>
+    Country</p>
+    <p>&nbsp;</p>
+</div>
+{% endblock %}

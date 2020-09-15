@@ -6,13 +6,14 @@ class ProductAdmin(admin.ModelAdmin):
         model = Product
 
     list_display = (
-        '_id',
+        'pid',
         'name',
         'price',
         'rating',
         'date_added',
         'copies_sold',
         'on_sale',
+        'sale_price',
         'image',
     )
 
