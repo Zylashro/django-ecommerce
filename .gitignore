@@ -2,4 +2,4 @@
 *.sqlite3
 *.pyc
 __pycache__
-changedName.py
+env.py
