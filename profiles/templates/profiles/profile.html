@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h2 class="mb-4">{{ profile.user.username }}'s Profile</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>Username: {{ profile.user.username }}</p>
+                <p>Email: {{ profile.user.email }}</p>
+                <a href="{% url 'change_password' %}">Change Password</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <p class="text-muted">Order History:</p>
+                <div class="table-responsive">
+                    <table class="table table-sm table-borderless">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Items</th>
+                                <th>Order Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'order_history' order.order_id %}" title="{{ order.order_id }}">
+                                            {{ order.order_id|truncatechars:6 }}
+                                        </a>
+                                    </td>
+                                    <td>{{ order.date }}</td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            {% for item in order.orderitem.all %}
+                                                <li class="small">
+                                                    {{ item.product.name }}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                    <td>{{ order.total }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <p class="text-muted">Licenses:</p>
+                <div class="table-responsive">
+                    <table class="table table-sm table-borderless">
+                        <thead>
+                            <tr>
+                                <th>License ID</th>
+                                <th>Date</th>
+                                <th>Product</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for license in licenses %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'licenses_owned' license.id %}" title="{{ license.key }}">
+                                            {{ license.key }}
+                                        </a>
+                                    </td>
+                                    <td>{{ license.date }}</td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            {% for item in license.all %}
+                                                <li class="small">
+                                                    {{ item.product.name }}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
