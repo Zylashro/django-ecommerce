@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<img src="{{ product.image_url }}/1366/300" class="img-fluid title-image" alt="{{ product.name }}">
+<div class="container h-100">
+    <h1 class="display-3 mt-3 mb-5">{{ product.name }} {% if isOnSale %} <span class="text-danger">ON SALE</span>{% endif %}</h1>
+    <div class="row">
+        <div class="col-6">
+            <p>{{ product.description }}</p>
+        </div>
+        <div class="col-6">
+            <p>Rating: {{ product.rating }}</p>
+            <p>Price: {{ product.price }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block additionaljs %}
+
+{% endblock %}
