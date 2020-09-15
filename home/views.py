@@ -1,11 +1,20 @@
 from django.shortcuts import render
 
+from products.models import Product
+
 # Create your views here.
 
 def index(request):
-    """ A view to return the index page """
+    products = Product.objects.filter(on_sale=True)[:3]
+    if products.count() < 1:
+        products = Product.objects.order_by('?')[:3]
+    
+    context = {
+        'products': products,
+        'range': range(products.count()),
+    }
 
-    return render(request, 'home/index.html')
+    return render(request, 'home/index.html', context)
 
 
 def tac(request):
