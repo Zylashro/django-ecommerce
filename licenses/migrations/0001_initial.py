@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('products', '0002_auto_20200914_1900'),
+        ('products', '0005_product_sale_price'),
         ('profiles', '0001_initial'),
     ]
 

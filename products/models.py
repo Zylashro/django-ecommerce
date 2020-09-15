@@ -1,8 +1,7 @@
 from django.db import models
-from django.core.validators import MaxValueValidator
 
 class Product(models.Model):
-    pid = models.CharField(max_length=254, primary_key=True)
+    pid = models.PositiveIntegerField(primary_key=True)
     name = models.CharField(max_length=254)
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
