@@ -44,7 +44,7 @@ def licenses_owned(request, id):
     }
 
     return render(request, context)
-
+'''
 @login_required
 def change_password(request, *args, **kwargs):
     if request.method == 'POST':
@@ -62,3 +62,4 @@ def change_password(request, *args, **kwargs):
     }
 
     return render(request, 'password/change_password.html', context)
+'''
