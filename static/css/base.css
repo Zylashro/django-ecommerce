@@ -18,6 +18,21 @@
     width: 100%;
 }
 
+.banner-height {
+    min-height: calc(100vw * 0.375);
+}
+
+.banner-text {
+    text-shadow: 1px 1px 2px black;
+}
+
+.three-lines {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+
 /* footer */
 .bg-footer {
     background: rgba(44,194,111,0.5);
