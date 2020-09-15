@@ -88,9 +88,9 @@
                                 <i class="fas fa-bars"></i>
                             </a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Products</a>
+                                <a class="dropdown-item" href="{% url 'products_list' %}">Products</a>
                                 <a class="dropdown-item" href="{% url 'instructions' %}">How it works</a>
-                                <a class="dropdown-item" href="#">Customer service</a>
+                                <a class="dropdown-item" href="{% url 'support' %}">Customer service</a>
                             </div>
                         </li>
                     </ul>
@@ -125,7 +125,7 @@
                     <div class="col-6 col-md-3">
                         <h5>Quick links</h5>
                         <ul class="list-unstyled text-small">
-                            <li><a class="text-muted" href="#">Products</a></li>
+                            <li><a class="text-muted" href="{% url 'products_list' %}">Products</a></li>
                             <li><a class="text-muted" href="{% url 'instructions' %}">How it works</a></li>
                             <li><a class="text-muted" href="{% url 'support' %}">Customer service</a></li>
                             <li><a class="text-muted" href="{% url 'contact' %}">Contact</a></li>
@@ -160,5 +160,5 @@
         {% block additionaljs %}
         {% endblock %}
 
-  </body>
+    </body>
 </html>
