@@ -3,20 +3,42 @@
 
 {% block content %}
 <img src="{{ product.image_url }}/1366/300" class="img-fluid title-image" alt="{{ product.name }}">
-<div class="container h-100">
-    <h1 class="display-3 mt-3 mb-5">{{ product.name }} {% if isOnSale %} <span class="text-danger">ON SALE</span>{% endif %}</h1>
-    <div class="row">
-        <div class="col-6">
-            <p>{{ product.description }}</p>
+<div class="container h-100 mb-5">
+    <h1 class="display-3 mt-3 mb-5">{{ product.name }}</h1>
+    <div class="detail-grid">
+        <div class="detail-description">
+            {{ product.description|linebreaks }}
+            <div class="mb-4">
+                <a href="#" class="d-block text-info mb-2"><i class="far fa-file-pdf"></i> user manual</a>
+                <a href="#" class="d-block text-info"><i class="fab fa-google-play"></i> download app</a>
+            </div>
+            <div class="addthis_inline_share_toolbox"></div>
         </div>
-        <div class="col-6">
-            <p>Rating: {{ product.rating }}</p>
-            <p>Price: ${{ product.price }}</p>
+        <div class="detail-sell">
+            <p><span class="d-inline-block stars" style="--rating: {{ product.rating }}; --star-size: 30px;" aria-label="Rating of this product is {{ product.rating }} out of 5."></span></p>
+            {% if isOnSale %}
+            <h4 class="text-danger d-inline-block d-md-block">On sale</h4>
+            <div class="d-inline-block d-md-block ml-3 ml-md-auto">
+                <span class="text-muted d-inline-block pr-2 pt-2"><s>${{ product.price }}</s></span>
+                <span class="text-danger d-inline-block pl-2 pt-2"><strong>${{ product.sale_price }}</strong></span>
+            </div>
+            {% else %}
+            <div>
+                <span class="text-success d-inline-block pl-2 pt-2"><strong>${{ product.price }}</strong></span>
+            </div>
+            {% endif %}
+            <form class="form" action="{% url 'add_to_cart' product.pid %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning mt-3">Add to cart</button>
+                <input type="hidden" name="redirect_url" value="{{ request.path }}">
+            </form>
         </div>
     </div>
 </div>
 {% endblock %}
 
-{% block additionaljs %}
-
+{% block morejs %}
+{{ block.super }}
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f612eb7d0184e07"></script>
 {% endblock %}
