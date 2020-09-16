@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container h-100 my-4">
+    <h1 class="h3 mb-4">Checkout</h1>
+    {% if not product_count or product_count < 1 %}
+    <p>Your shopping cart is empty.</p>
+    {% else %}
+        {% for item in cart_items %}
+            <div class="row my-2">
+                <div class="col-3 col-sm-2">
+                    <a href="{% url 'product_detail' item.product.pid %}"><img src="{{ item.product.image_url }}/200/200" class="w-100 rounded"
+                        alt="{{ item.product.name }}"></a>
+                </div>
+                <div class="col-4 col-sm-5 col-md-6 py-1 cart-field">
+                    <a href="{% url 'product_detail' item.product.pid %}" class="h5 d-block mb-1 text-secondary">{{ item.product.name }}</a>
+                    <span class="d-block text-muted">Price: ${{ item.product.price }}</span>
+                </div>
+                <div class="col-3 col-sm-3 cart-field cart-field-right">
+                    {% if item.product.on_sale %}
+                    <span class="h5 d-inline-block text-secondary">${{ item.product.sale_price }}</span>
+                    {% else %}
+                    <span class="h5 d-inline-block text-secondary">${{ item.product.price }}</span>
+                    {% endif %}
+                </div>
+                <div class="col-2 col-sm-2 col-md-1 cart-field cart-field-right">
+                    <form class="form" action="{% url 'remove_from_cart' item.product.pid %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-link text-secondary btn-delete"><i class="far fa-trash-alt"></i></button>
+                        <input type="hidden" name="redirect_url" value="{{ request.path }}">
+                    </form>
+                </div>
+            </div>
+            <hr class="">
+        {% endfor %}
+        <div class="row my-2">
+            <div class="col-3 col-sm-4 col-md-5"></div>
+            <div class="col-4 col-sm-3">
+                <span class="h5">Total:</span>
+            </div>
+            <div class="col-3 col-sm-3 cart-field cart-field-right">
+                <span class="h5">${{ total|floatformat:2 }}</span>
+            </div>
+            <div class="col-2 col-sm-2 col-md-1"></div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+<div class="col-12 col-md-6 col-lg-4 my-3">
+    <div class="card {% if product.on_sale %}border-danger{% else %}border-success{% endif %}">
+        <a href="{% url 'product_detail' product.pid %}"><img src="{{ product.image_url }}/400/200" class="card-img-top"
+                alt="{{ product.name }}"></a>
+        <div class="card-body text-secondary">
+            <a href="{% url 'product_detail' product.pid %}" class="h5 d-inline-block mb-3 card-title text-secondary">{{ product.name }}</a>
+            <span class="d-inline-block float-right stars" style="--rating: {{ product.rating }};" aria-label="Rating of this product is {{ product.rating }} out of 5."></span>
+            <p class="card-text two-lines">{{ product.description }}</p>
+        </div>
+        <div class="card-footer">
+            {% if product.on_sale %}
+            <span class="text-muted d-inline-block pr-2 pt-2"><s>${{ product.price }}</s></span>
+            <span class="text-danger d-inline-block pl-2 pt-2"><strong>${{ product.sale_price }}</strong></span>
+            {% else %}
+            <span class="text-success d-inline-block pl-2 pt-2"><strong>${{ product.price }}</strong></span>
+            {% endif %}
+            <form class="form float-right" action="{% url 'add_to_cart' product.pid %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning">Add to cart</button>
+                <input type="hidden" name="redirect_url" value="{{ request.path }}">
+            </form>
+        </div>
+    </div>
+</div>

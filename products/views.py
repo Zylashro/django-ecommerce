@@ -1,16 +1,19 @@
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.contrib import messages
+from django.db.models import Q
 
 from .models import Product
 from .forms import ProductForm
 
 def products_list_view(request):
-    sale = Product.objects.filter(on_sale=True)
-    products = Product.objects.filter(on_sale=False)
+    allProducts = Product.objects.all()
+    sale = allProducts.filter(on_sale=True)
+    products = allProducts.filter(on_sale=False)
 
     isSaleActive = sale.count() > 0
 
-    sort = 'none'
+    query = None
+    sort = None
 
     if request.GET:
         if 'sort' in request.GET:
@@ -23,14 +26,15 @@ def products_list_view(request):
                 sortkey = '-copies_sold'
             products = products.order_by(sortkey)
             
-        # if 'q' in request.GET:
-        #     query = request.GET['q']
-        #     if not query:
-        #         messages.error(request, "You didn't enter any search criteria!")
-        #         return redirect(reverse('products'))
-            
-        #     queries = Q(name__icontains=query) | Q(description__icontains=query)
-        #     products = products.filter(queries)
+        if 'q' in request.GET:
+            query = request.GET['q']
+            if not query:
+                messages.error(request, "You didn't enter any search criteria!")
+                return redirect(reverse('products_list'))
+
+            queries = Q(name__icontains=query) | Q(description__icontains=query)
+            products = allProducts.filter(queries)
+            isSaleActive = False
 
     current_sorting = sort
 
@@ -38,7 +42,8 @@ def products_list_view(request):
         'products': products,
         'sale': sale,
         'isSaleActive': isSaleActive,
-        'sortOrder': current_sorting
+        'sortOrder': current_sorting,
+        'search': query,
     }
 
     return render(request, 'products/products_list.html', context)
@@ -60,7 +65,7 @@ def products_create_view(request, *args, **kwargs):
         if form.is_valid():
             product = form.save()
             messages.success(request, 'Product created!')
-            return redirect(reversed('product_detail', args=[product._id]))
+            return redirect(reversed('product_detail', args=[product.pid]))
         else:
             messages.error(request, 'Failed to create product.')
     else:
@@ -70,10 +75,10 @@ def products_create_view(request, *args, **kwargs):
         'form': form,
     }
 
-    return redirect(reversed('product_detail', args=[product.pid]))
+    return render(request, context)
 
 def products_edit_view(request, pid, *args, **kwargs):
-    product = get_object_or_404(Product, pid=pid)
+    product = get_object_or_404(Product, id=pid)
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
@@ -93,7 +98,7 @@ def products_edit_view(request, pid, *args, **kwargs):
     return render(request, context)
 
 def products_delete_view(request, pid, *args, **kwargs):
-    product = get_object_or_404(Product, pid=pid)
+    product = get_object_or_404(Product, id=pid)
     product.delete()
     messages.success(request, 'Product deleted.')
     return redirect(reversed('products_list'))

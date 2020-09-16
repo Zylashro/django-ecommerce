@@ -9,7 +9,7 @@ import json
 from .models import Order, OrderItem
 from products.models import Product
 from profiles.models import UserProfile
-from shopping_cart.contexts import shopping_cart
+from shopping_cart.contexts import shopping_cart_contents
 
 @require_POST
 def cache_checkout(request, *args, **kwargs):
