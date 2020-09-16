@@ -15,7 +15,7 @@ import os
 import dj_database_url
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 if DEBUG:
     from .env import SECRET_KEY, DATABASE_URL, STRIPE_PUBLIC_KEY, STRIPE_SECRET_KEY, STRIPE_WH_SECRET, EMAIL_HOST_USER, EMAIL_HOST_PASS
@@ -126,6 +126,7 @@ else:
     DATABASE_URL = os.environ.get('DATABASE_URL')
     DATABASES = {
         'default': dj_database_url.parse(DATABASE_URL)
+        # 'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     }
 
 
