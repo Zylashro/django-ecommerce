@@ -9,7 +9,7 @@ from profiles.models import UserProfile
 import uuid
 
 class License(models.Model):
-    user = models.ForeignKey(UserProfile, null=False, blank=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, null=False, blank=False, on_delete=models.CASCADE, related_name='licenses')
     key = models.CharField(max_length=254)
     product = models.ForeignKey(Product, null=False, blank=False, on_delete=models.CASCADE)
     date_acquired = models.DateTimeField(auto_now_add=True)
