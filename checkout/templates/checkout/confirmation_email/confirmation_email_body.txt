@@ -1,20 +1,22 @@
-Hello {{ order.user_profile.name }}!
+Hello {{ order.full_name }}!
 
-This is a confirmation email for your order at (Store). Your order information is below:
+This is a confirmation of your order at Boutique Ado. Your order information is below:
 
-Order ID: {{ order.order_id }}
+Order Number: {{ order.order_number }}
 Order Date: {{ order.date }}
-Total: ${{ order.total }}
 
-Below you'll find both the activation key for your product as well as a download link(fake):
+Order Total: ${{ order.order_total }}
+Delivery: ${{ order.delivery_cost }}
+Grand Total: ${{ order.grand_total }}
 
-Activation Key: (key)
-Click to download.
+Your order will be shipped to {{ order.street_address1 }} in {{ order.town_or_city }}, {{ order.country }}.
 
-If you have any questions, feel free to contact us at (store email).
+We've got your phone number on file as {{ order.phone_number }}.
 
-Thank you for your purchase!
+If you have any questions, feel free to contact us at {{ contact_email }}.
+
+Thank you for your order!
 
 Sincerely,
 
-Store
+Boutique Ado

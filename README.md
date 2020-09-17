@@ -1,7 +1,3 @@
-![HTML Validator](#)
-
-[Live Site](https://ms4-django-ecommerce.herokuapp.com/)
-
 # Medb
 
 This project is designed to be a simple e-commerce site selling software. The project serves to demonstrate my ability and understanding of Django.
@@ -11,7 +7,7 @@ This project is designed to be a simple e-commerce site selling software. The pr
 1. [**Project Overview**](#project-overview)
 2. [**UX**](#UX)
     - [**User Stories**](#user-stories)
-	- [**Mockup**](#mockup)
+    - [**Mockup**](#mockup)
 3. [**Features**](#features)
     - [**Header**](#header)
     - [**Home Page**](#home-page)
@@ -19,18 +15,21 @@ This project is designed to be a simple e-commerce site selling software. The pr
     - [**Product Detail Page**](#product-detail-page)
     - [**Login / Register Page**](#login-/-register-page)
     - [**Profile**](#profile)
+    - [**Cart**](#cart)
+    - [**Checkout**](#checkout)
     - [**Footer**](#footer)
 4. [**Technologies**](#technologies)
     - [**Pips**](#pips)
 5. [**Testing**](#testing)
     - [**HTML Validator**](#html-validator)
     - [**CSS Validator**](#css-validator)
-    - [**JavaScript Validator**](#javascript-validator)
-    - [**Browsers**](#browsers)
-    - [**Manual Testing**](#manual-testing)
+    - [**Automatic Testing**](#automatic-testing)
 6. [**Deployment**](#deployment)
-7. [**Self-Reflection**](#self-reflection)
-8. [**Credits**](#credits)
+7. [**Bugs**](#bugs)
+    - [**Registration Redirect**](#registration-redirect)
+    - [**Stripe and Profiles**](#stripe-and-profiles)
+9. [**Self-Reflection**](#self-reflection)
+10. [**Credits**](#credits)
     - [**Icons**](#icons)
 
 
@@ -56,8 +55,9 @@ The goal of this site is to sell all kind of software to users. With the users b
 
 A link that takes you to the mockup I made for this project. **Note, that the links take you to a PDF file and do not display an image!**
 
-- ![Mockup Desktop](#)
-- ![Mockup Mobile](#)
+The mockup was made before work began on the project as a general guide on how to design the project. And as so does not reflect the final design as seen on the live production site.
+
+- ![Mockup Desktop](designDocs/mockup/MS4.pdf)
 
 ## Features
 
@@ -77,6 +77,8 @@ And a burger icon which when clicked will open a dropdown with links to other pa
 
 A simple page with a carousel showing either three products that are currently on sale, or showing three random products. The carousel slides can be scrolled through using either the arrows or highlighters below.
 
+The user can click either the products name or price to be taken to its details page.
+
 ### Store Page:
 
 The page will display all the products that the user can purchase in neat little cards.
@@ -86,8 +88,6 @@ If a product/s is currently on sale it will display at the top of the store with
 The user will be able to sort the order of the products with the select menu near the title of the products list.
 
 Each product card contains an image, the products name, description, rating, price, and an option to add the product to their cart. Clicking on either the image or title will take the user to that products detail page.
-
-The user won't be able to add a product to their cart unless they are signed in.
 
 ### Product Detail Page:
 
@@ -99,17 +99,35 @@ The user will be able to add the product to their cart if they are signed in.
 
 ### Login / Register Page:
 
-A brief page containing both a login and register form.
-
-The user will also be able to click a link to change their password if they forgot it.
-
-Along side the two forms the user will have an option to create an account through their Google, Facebook, or Twitter account if they prefer.
+A brief page containing either a login and register form.
 
 ### Profile:
 
 On the users profile the user will be able to see their username and email, their order history, and all the software licenses that they have bought in the store.
 
-The user will also be able to change their password here through a change password form.
+The user will also be able to change their password here through a change password form. As well as manage their emails addresses.
+
+The user is able to manage their email addresses by adding new ones, deleting unwanted ones, and making an email their primary address.
+
+The users profile data will be displayed here. The user can choose to leave it blank and fill it in at checkout or here.
+
+### Cart
+
+When a user click the shopping cart icon without any items in the cart, the user will be redirected to a page telling them that no items are currently in their cart with a button displayed which when clicked will take the user to the products page.
+
+If the user has items in the cart, the user will then be taken to a page where they will see all their current cart items, both their individual and total cost, as well as the option to remove the item from their cart.
+
+From here the user is able to head towards the checkout page.
+
+Each time an item is added to the cart, a toast will pop out notifying the user of their action. The user is able to go to checkout with this toast in addition to the cart page.
+
+### Checkout
+
+On the checkout page the user will be greeted by the payment form on the left, and their cart on the right showing all the before-mentioned cart information.
+
+If the user is not logged in at this step, they won't be able to complete their order as the complete order button will not be displayed but rather a login button will take its place.
+
+If the user is indeed logged in, then the user will be able to complete their oder.
 
 ### Footer:
 
@@ -134,7 +152,9 @@ The list of technologies and third-party packages used in the making of this pro
 
 Along with the technologies listed above, I've also used the following pips while making this project:
 
-- **[Flask](https://flask.palletsprojects.com/en/1.1.x/):** A micro web framework written in Python used to loop over the database, create the HTML templates, and append the results from the backend code to the frontend.
+- **[Allauth](https://django-allauth.readthedocs.io/en/latest/index.html):** An authentication and account management 3rd party tool.
+- **[Gunicorn](https://gunicorn.org/):** A Python web service gateway used for easier integration to Heroku.
+- **[Stripe](https://stripe.com/):** A payment processing software.
 
 For any additional pips please refer to the requirements.txt file.
 
@@ -144,84 +164,101 @@ For any additional pips please refer to the requirements.txt file.
 
 The result of the HTML Validator can be seen in the image below:
 
-![HTML Validator](#)
+![HTML Validator](designDocs/validators/html.png)
 
 ### CSS Validator
 
 The result of the CSS Validator can be seen in the image below:
 
-![CSS Validator](#)
+![CSS Validator](designDocs/validators/css.png)
 
-### JavaScript Validator
+### Automatic Testing
 
-The JS used in this project was tested with **[JSHint](https://jshint.com/)** to ensure bug free and correct code.
+For this project a few automatic tests have been made.
 
-Due to the fact that the JS for this project is split between five different files, I have opted to combine the results of each tested file into a single result for easier analytical purposes.
+In order to run all the test you'd have to run this command in the command terminal:
 
-Each file has been separately tested to ensure lack of conflict between files.
+```
+python manage.py test
+```
 
-- Metrics:
-    - There are 19 functions in this project.
-    - Function with the largest signature take 1 arguments, while the median is 1.
-    - Largest function has 6 statements in it, while the median is 2.
-    - The most complex function has a cyclomatic complexity value of 3 while the median is 1.
+Or, if you want to run the test for a single app:
 
-### Browsers
-
-The site has been tested on the following browsers:
-
-- Chrome
-- IE
-- Edge
-
-Chrome and Edge work as intended without issue.
-
-IE is broken with the table on both the indexes being out of line. The icon on the home page being displaced. And the charts not displaying at all.
-
-### Manual Testing
-
-
+```
+python manage.py test <app name>
+```
 
 
 ## Deployment
 
 The process it took to deploy this project goes as follows:
 
-1. Download and install **[Python](https://www.python.org/)** and **[Node.js](https://nodejs.org/en/)**.
+1. Download and install **[Python](https://www.python.org/)**.
 2. Clone the repository
 ```
-git clone https://github.com/Zylashro/data-index-project.git
+git clone https://github.com/Zylashro/django-ecommerce.git
 ```
 3. Move into the folder
 ```
-cd data-index-project
+cd django-ecommerce
 ```
-4. After you've done that, make sure Node is installed and run the following to get all the JS dependencies
+4. Create and activate your virtual environment
 ```
-npm install
+python venv -m <environment name>
 ```
 5. Install requirements with pip
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 ```
-6. Create and activate your virtual environment
+6. Log into **[Heroku](https://www.heroku.com/home)**.
+7. Create a new Heroku project, and configure all the necessary settings.
+8. Once a project is created, manuever to the Settings tab and configure the **Confiq Vars**.
+9. For this project those vars were:
+    - SECRET_KEY
+    - DATABASE_URL
+    - STRIPE_PUBLIC_KEY
+    - STRIPE_SECRET_KEY
+    - STRIPE_WH_SECRET
+    - EMAIL_HOST_USER
+    - EMAIL_HOST_PASS
+    - ENV_ROLE
+10. Head on towards the Resources tab and on add-ons add **Heroku Postgres**.
+11. Start the app locally
 ```
-python venv env
+python manage.py runserver
 ```
-7. Either create a seperate .py file, or in the app.py file add the following code
-```python
-app.config["MONGO_DBNAME"] = 'ENTER_DBNAME'
-app.config["MONGO_URI"] = 'CONNECT_TO_YOUR_DB'
-app.secret_key = 'ENTER_SECRET_KEY'
-```
-8. Start the app
-```
-python app.py
-```
+
+## Bugs
+
+There are a few known bugs in the code. Some more pressing than others.
+
+The current bugs that I have found consist of two issues.
+
+### Registration Redirect
+
+When the user clicks the sing up button on the registration page, Heroku crashes the page. The user's registration still goes through.
+
+### Stripe and Profiles
+
+On the checkout page, once the user has entered all the necessary information and click the confirm oder button, the button becomes unclickable and nothing happens.
+
+On the backend side of things, the order does go through as confirmed by Stripe getting and logging this payment event.
+
+Sadly, the user can't do anything on the checkout page after clicking the confirm order button.
+
+After confirming the order and going to the users profile, both the order history and license sections of the profile remain empty as if no purchase has been made.
+
+If the user goes back to their cart, they will find that the product that they have "bought" is still in the cart.
 
 ## Self-Reflection
 
+Initially, for this project I planned using Django to handle the backend logic and for React to handle the frontend logic for this project. And about a week into it, I figure out that the routing I would need to do to make both Django and React play nice together was a bit too big a hurdle to tackle given the time constrains I had.
 
+Had to start over from scratch with pure Django by my side, and for the week or so I had to finish this, I am pretty happy with what I've managed to do.
+
+Sadly their are bugs in the code which I didn't have the time to address. And my testing could have been more throughout in almost every sense of the word.
+
+So far, this has been the most stressful, and emotionally draining project thus far. But it had thought me a great deal about working in a very small time-frame.
 
 
 ## Credits
