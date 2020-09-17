@@ -56,14 +56,6 @@
                         <p class="mb-1"><span class="text-muted">Order number:</span> {{ order.order_id }}</p>
                         <p class="mb-1"><span class="text-muted">Date:</span> {{ order.date }}</p>
                         <p class="mb-1"><span class="text-muted">Total:</span> {{ order.total }}</p>
-                        <p class="mb-1"><span class="text-muted">Products:</span></p>
-                        <ul class="list-unstyled">
-                            {% for item in order.orderitem.all %}
-                                <li class="small">
-                                    <a href="{% url 'product_detail' item.product.pid %}"></a>{{ item.product.name }}</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
                     </div>
                     {% endfor %}
                 </div>
