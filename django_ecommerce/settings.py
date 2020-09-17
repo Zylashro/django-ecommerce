@@ -10,31 +10,34 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-from pathlib import Path 
 import os
 import dj_database_url
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-if DEBUG:
+# based on https://ultimatedjango.com/learn-django/lessons/define-environments/
+ENV_ROLE = os.environ['ENV_ROLE']
+
+#SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+if ENV_ROLE == 'development':
+    DEBUG = True
+    TEMPLATE_DEBUG = DEBUG
     from .env import SECRET_KEY, DATABASE_URL, STRIPE_PUBLIC_KEY, STRIPE_SECRET_KEY, STRIPE_WH_SECRET, EMAIL_HOST_USER, EMAIL_HOST_PASS
 
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
+if ENV_ROLE == 'live-debug':
+    DEBUG = True
+    TEMPLATE_DEBUG = DEBUG
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ['SECRET_KEY']
 
-
-
-ALLOWED_HOSTS = ['django-ecommerce.herokuapp.com', 'localhost', '127.0.0.1']
-
+ALLOWED_HOSTS = ['ms4-django-ecommerce.herokuapp.com', 'https://ms4-django-ecommerce.herokuapp.com/', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -56,6 +59,7 @@ INSTALLED_APPS = [
     'shopping_cart',
     'checkout',
     'licenses',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -87,6 +91,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'shopping_cart.contexts.shopping_cart_contents',
             ],
             'builtins': [
                 'crispy_forms.templatetags.crispy_forms_tags',
@@ -105,13 +110,16 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email',
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 ACCOUNT_USERNAME_MIN_LENGTH = 4
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/profile/'
+
+if ENV_ROLE == 'development':
+    ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 WSGI_APPLICATION = 'django_ecommerce.wsgi.application'
 
@@ -119,18 +127,16 @@ WSGI_APPLICATION = 'django_ecommerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-if DEBUG:
+if ENV_ROLE == 'development':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
 else:
-    DATABASE_URL = os.environ.get('DATABASE_URL')
     DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL)
-        # 'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     }
 
 
@@ -175,8 +181,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Stripe
 
@@ -185,9 +189,10 @@ STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 STRIPE_WH_SECRET = os.environ.get('STRIPE_WH_SECRET')
 
+
 # Email
 
-if DEBUG:
+if ENV_ROLE == 'development':
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     DEFAULT_FROM_EMAIL = 'store@gmail.com'
 else:

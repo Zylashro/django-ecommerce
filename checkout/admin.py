@@ -21,6 +21,15 @@ class OrderAdmin(admin.ModelAdmin):
         'order_id',
         'user_profile',
         'date',
+        'full_name',
+        'email', 
+        'phone_number', 
+        'country',
+        'postcode', 
+        'town_or_city', 
+        'street_address1',
+        'street_address2', 
+        'county',
         'total',
         'shopping_cart',
         'stripe_pid'
@@ -28,6 +37,7 @@ class OrderAdmin(admin.ModelAdmin):
 
     list_display = (
         'order_id',
+        'full_name',
         'date',
         'total'
     )
