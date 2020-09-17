@@ -13,27 +13,27 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 import dj_database_url
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
-if DEBUG:
-    from .env import SECRET_KEY, DATABASE_URL, STRIPE_PUBLIC_KEY, STRIPE_SECRET_KEY, STRIPE_WH_SECRET, EMAIL_HOST_USER, EMAIL_HOST_PASS
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# based on https://ultimatedjango.com/learn-django/lessons/define-environments/
+ENV_ROLE = os.environ['ENV_ROLE']
+
+#SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+if ENV_ROLE == 'development':
+    DEBUG = True
+    TEMPLATE_DEBUG = DEBUG
+    from .env import SECRET_KEY, DATABASE_URL, STRIPE_PUBLIC_KEY, STRIPE_SECRET_KEY, STRIPE_WH_SECRET, EMAIL_HOST_USER, EMAIL_HOST_PASS
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
-
-
+SECRET_KEY = os.environ['SECRET_KEY']
 
 ALLOWED_HOSTS = ['ms4-django-ecommerce.herokuapp.com', 'https://ms4-django-ecommerce.herokuapp.com/', 'localhost', '127.0.0.1']
-
 
 # Application definition
 
@@ -114,13 +114,16 @@ ACCOUNT_USERNAME_MIN_LENGTH = 4
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/profile/'
 
+if ENV_ROLE == 'development':
+    ACCOUNT_EMAIL_VERIFICATION = 'none'
+
 WSGI_APPLICATION = 'django_ecommerce.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-if DEBUG:
+if ENV_ROLE == 'development':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -185,7 +188,7 @@ STRIPE_WH_SECRET = os.environ.get('STRIPE_WH_SECRET')
 
 # Email
 
-if DEBUG:
+if ENV_ROLE == 'development':
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     DEFAULT_FROM_EMAIL = 'store@gmail.com'
 else:
