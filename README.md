@@ -164,13 +164,13 @@ For any additional pips please refer to the requirements.txt file.
 
 The result of the HTML Validator can be seen in the image below:
 
-![HTML Validator](designDocs/validators/html.png)
+![HTML Validator](designDocs/validators/html.PNG)
 
 ### CSS Validator
 
 The result of the CSS Validator can be seen in the image below:
 
-![CSS Validator](designDocs/validators/css.png)
+![CSS Validator](designDocs/validators/css.PNG)
 
 ### Automatic Testing
 
