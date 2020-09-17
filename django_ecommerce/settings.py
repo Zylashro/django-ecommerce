@@ -27,6 +27,10 @@ if ENV_ROLE == 'development':
     TEMPLATE_DEBUG = DEBUG
     from .env import SECRET_KEY, DATABASE_URL, STRIPE_PUBLIC_KEY, STRIPE_SECRET_KEY, STRIPE_WH_SECRET, EMAIL_HOST_USER, EMAIL_HOST_PASS
 
+if ENV_ROLE == 'live-debug':
+    DEBUG = True
+    TEMPLATE_DEBUG = DEBUG
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
