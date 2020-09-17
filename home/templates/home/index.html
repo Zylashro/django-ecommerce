@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-    <div id="carouselProducts" class="carousel slide">
+    <div id="carouselProducts" class="carousel slide banner-height">
         <ol class="carousel-indicators">
             {% for i in range %}
             <li data-target="#carouselProducts" data-slide-to="{{ i }}" {% if i == 0 %}class="active"{% endif %}></li>
@@ -11,10 +11,14 @@
         <div class="carousel-inner">
             {% for product in products %}
             <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                <img src="{{ product.image_url }}/1600/600" class="d-block w-100" alt="{{ product.name }}">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5 class="banner-text">{{ product.name }}</h5>
-                    <p class="banner-text">{{ product.price }}</p>
+                <img src="{{ product.image_url }}/1600/700" class="d-block w-100" alt="{{ product.name }}">
+                <div class="carousel-caption">
+                    <a class="h3 banner-text text-white" href="{% url 'product_detail' product.pid %}">{{ product.name }}</a>
+                    {% if product.on_sale %}
+                    <a href="{% url 'product_detail' product.pid %}" class="display-4 text-white banner-text d-none d-md-block">ON SALE ${{ product.sale_price }}</a>
+                    {% else %}
+                    <a href="{% url 'product_detail' product.pid %}" class="h3 text-white banner-text d-none d-md-block">${{ product.price }}</a>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
@@ -30,7 +34,7 @@
     </div>
 {% endblock %}
 
-{% block additionaljs %}
+{% block morejs %}
 <script>
     $('.carousel').carousel()
 </script>

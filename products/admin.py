@@ -14,7 +14,6 @@ class ProductAdmin(admin.ModelAdmin):
         'copies_sold',
         'on_sale',
         'sale_price',
-        'image',
     )
 
     ordering = ('date_added',)
