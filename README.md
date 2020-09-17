@@ -40,6 +40,8 @@ The goal of this site is to sell all kind of software to users. With the users b
 
 ## UX
 
+### User Stories
+
 - As an user, I want to be able to browse through the sites collection of items.
 - As an user, I want to be able to view the details of each individual item.
 - As an user, I want to be able to add items into a cart so I can purchase in bulk.
