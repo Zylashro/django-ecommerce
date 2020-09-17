@@ -6,11 +6,13 @@ from django.conf import settings
 
 import stripe
 import json
+from datetime import datetime
 
 from .forms import OrderForm
 from .models import Order, OrderItem
 from products.models import Product
 from profiles.models import UserProfile
+from licenses.models import License
 from profiles.forms import UserProfileForm
 from shopping_cart.contexts import shopping_cart_contents
 
@@ -51,19 +53,27 @@ def checkout(request, *args, **kwargs):
 
         order_form = OrderForm(form_data)
 
-        if order_form.is_valid():
+        """ for testing on dev """
+        if request.POST['develop-buy'] == 'develop':            
             order = order_form.save(commit=False)
-            pid = request.POST.get('client_secret').split('_secret')[0]
-            order.stripe_pid = pid
+            order.total = request.POST['total']
+            order.stripe_pid = 'dev_stripe_pid'
             order.shopping_cart = json.dumps(cart)
+            now = datetime.now()
+            order.date = now.strftime("%Y-%m-%d %H:%M")
             order.save()
             for product_id, product_data in cart.items():
                 try:
                     product = Product.objects.get(pid=product_id)
+                    if product.on_sale:
+                        item_total = product.sale_price
+                    else:
+                        item_total = product.price
                     if isinstance(product_data, int):
                         order_item = OrderItem(
                             order=order,
                             product=product,
+                            item_total=item_total,
                         )
                         order_item.save()
                 except Product.DoesNotExist:
@@ -72,8 +82,41 @@ def checkout(request, *args, **kwargs):
                     return redirect(reverse('view_cart'))
 
             # Save the info to the user's profile if all is well
-            request.session['save_info'] = 'save-info' in request.POST
-            return redirect(reverse('checkout_success', args=[order.order_number]))
+            request.session['save_info'] = 'save_info' in request.POST
+            return redirect(reverse('checkout_success', args=[order.order_id]))
+        """ end for testing on dev """
+
+        if order_form.is_valid():
+            order = order_form.save(commit=False)
+            pid = request.POST.get('client_secret').split('_secret')[0]
+            order.stripe_pid = pid
+            order.shopping_cart = json.dumps(cart)
+            order.total = request.POST['total']
+            now = datetime.now()
+            order.date = now.strftime("%Y-%m-%d %H:%M")
+            order.save()
+            for product_id, product_data in cart.items():
+                try:
+                    product = Product.objects.get(pid=product_id)
+                    if product.on_sale:
+                        item_total = product.sale_price
+                    else:
+                        item_total = product.price
+                    if isinstance(product_data, int):
+                        order_item = OrderItem(
+                            order=order,
+                            product=product,
+                            item_total=item_total,
+                        )
+                        order_item.save()
+                except Product.DoesNotExist:
+                    messages.error(request, "One of the products in your cart wasn't found.")
+                    order.delete()
+                    return redirect(reverse('view_cart'))
+
+            # Save the info to the user's profile if all is well
+            request.session['save_info'] = 'save_info' in request.POST
+            return redirect(reverse('checkout_success', args=[order.order_id]))
         else:
             messages.error(request, ('There was an error with your form. '
                                     'Please double check your information.'))
@@ -113,10 +156,13 @@ def checkout(request, *args, **kwargs):
     if not stripe_public_key:
         messages.warning(request, 'Stripe public key is missing.')
 
+    show_develop_buy = settings.ENV_ROLE == 'development'
+
     context = {
         'order_form': order_form,
         'stripe_public_key': stripe_public_key,
         'client_secret': intent.client_secret,
+        'show_develop_buy': show_develop_buy,
     }
 
     return render(request, 'checkout/checkout.html', context)
@@ -129,6 +175,22 @@ def checkout_success(request, order_id):
     # Attach the user's profile to the order
     order.user_profile = profile
     order.save()
+
+    # Create license
+    cart = request.session.get('cart', {})
+    for product_id, product_data in cart.items():
+        try:
+            product = Product.objects.get(pid=product_id)
+            if isinstance(product_data, int):
+                now = datetime.now()
+                license_item = License(
+                    user=profile,
+                    product=product,
+                    date_acquired=now.strftime("%Y-%m-%d %H:%M"),
+                )
+                license_item.save()
+        except Product.DoesNotExist:
+            messages.error(request, "One of the products in your cart wasn't found. Please contact support to add licenses")
 
     # Save the user's info
     if save_info:

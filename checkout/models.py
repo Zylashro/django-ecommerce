@@ -27,12 +27,8 @@ class Order(models.Model):
 
     def _generate_order_id(self):
         return uuid.uuid4().hex.upper()
-
-    def update_total(self):
-        self.total = self.items.aggregate(Sum('item_total'))['item_total__sum'] or 0
-        self.save()
-
-    def save_order(self, *args, **kwargs):
+    
+    def save(self, *args, **kwargs):
         if not self.order_id:
             self.order_id = self._generate_order_id()
         super().save(*args, **kwargs)
@@ -45,9 +41,8 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, null=False, blank=False, on_delete=models.CASCADE)
     item_total = models.DecimalField(max_digits=6, decimal_places=2, null=False, blank=False, editable=False)
 
-    def save_order_item(self, *args, **kwargs):
-        self.item_total = self.product.price
+    def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'ID {self.product._id} on order {self.order.order_id}'
+        return f'ID {self.product.pid} on order {self.order.order_id}'
