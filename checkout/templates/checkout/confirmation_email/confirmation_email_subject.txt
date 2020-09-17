@@ -1,1 +1,1 @@
-Store Confirmation for Order {{ order.order_id }}
+Medb Confirmation for Order Number {{ order.order_id }}
