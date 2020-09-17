@@ -1,7 +1,7 @@
 from django.db import models
 
 class Product(models.Model):
-    pid = models.PositiveIntegerField(primary_key=True)
+    pid = models.CharField(max_length=254, primary_key=True, serialize=False)
     name = models.CharField(max_length=254)
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
