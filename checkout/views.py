@@ -76,7 +76,7 @@ def checkout(request, *args, **kwargs):
             return redirect(reverse('checkout_success', args=[order.order_number]))
         else:
             messages.error(request, ('There was an error with your form. '
-                                     'Please double check your information.'))
+                                    'Please double check your information.'))
         
     else:
         cart = request.session.get('cart', {})
@@ -121,13 +121,29 @@ def checkout(request, *args, **kwargs):
 
     return render(request, 'checkout/checkout.html', context)
 
-def checkout_success(request, order_id, *args, **kwargs):
+def checkout_success(request, order_id):
+    save_info = request.session.get('save_info')
     order = get_object_or_404(Order, order_id=order_id)
 
-    if request.user.is_authenticated:
-        profile = UserProfile.objects.get(user=request.user)
-        order.user_profile = profile
-        order.save()
+    profile = UserProfile.objects.get(user=request.user)
+    # Attach the user's profile to the order
+    order.user_profile = profile
+    order.save()
+
+    # Save the user's info
+    if save_info:
+        profile_data = {
+            'default_phone_number': order.phone_number,
+            'default_country': order.country,
+            'default_postcode': order.postcode,
+            'default_town_or_city': order.town_or_city,
+            'default_street_address1': order.street_address1,
+            'default_street_address2': order.street_address2,
+            'default_county': order.county,
+        }
+        user_profile_form = UserProfileForm(profile_data, instance=profile)
+        if user_profile_form.is_valid():
+            user_profile_form.save()
 
     messages.success(request, f'Order successfully processed! \
         Order ID: {order_id}. A confirmation email will be sent to {order.email}.')
@@ -139,4 +155,4 @@ def checkout_success(request, order_id, *args, **kwargs):
         'order': order,
     }
 
-    return render(request, context)
+    return render(request, 'checkout/checkout_success.html', context)

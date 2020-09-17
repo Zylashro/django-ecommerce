@@ -32,7 +32,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 
 
-ALLOWED_HOSTS = ['django-ecommerce.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['ms4-django-ecommerce.herokuapp.com', 'https://ms4-django-ecommerce.herokuapp.com/', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -128,10 +128,8 @@ if DEBUG:
         }
     }
 else:
-    DATABASE_URL = os.environ.get('DATABASE_URL')
     DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL)
-        # 'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     }
 
 
@@ -176,12 +174,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
+
 # Stripe
 
 STRIPE_CURRENCY = 'usd'
 STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 STRIPE_WH_SECRET = os.environ.get('STRIPE_WH_SECRET')
+
 
 # Email
 
