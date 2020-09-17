@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container h-100 my-4">
+    <h1 class="display-4 mb-4">Thank You</h1>
+    <p class="lead">Your order information is below. A confirmation email will be sent to <strong>{{ order.email }}</strong>.</p>
+    <p class="lead">Your license is on <a href="{% url 'profile' %}">profile page</a>.</p>
+</div>
+{% endblock %}
