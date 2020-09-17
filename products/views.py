@@ -16,16 +16,6 @@ def products_list_view(request):
     sort = None
 
     if request.GET:
-        if 'sort' in request.GET:
-            sort = request.GET['sort']
-            if sort == 'name':
-                sortkey = 'name'
-            if sort == 'rating':
-                sortkey = '-rating'
-            if sort == 'sale':
-                sortkey = '-copies_sold'
-            products = products.order_by(sortkey)
-            
         if 'q' in request.GET:
             query = request.GET['q']
             if not query:
@@ -35,6 +25,16 @@ def products_list_view(request):
             queries = Q(name__icontains=query) | Q(description__icontains=query)
             products = allProducts.filter(queries)
             isSaleActive = False
+
+        if 'sort' in request.GET:
+            sort = request.GET['sort']
+            if sort == 'name':
+                sortkey = 'name'
+            if sort == 'rating':
+                sortkey = '-rating'
+            if sort == 'sale':
+                sortkey = '-copies_sold'
+            products = products.order_by(sortkey)
 
     current_sorting = sort
 

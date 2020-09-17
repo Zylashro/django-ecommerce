@@ -47,6 +47,7 @@
             <p class="text-muted">Please fill out the form below to complete your order</p>
             <form action="{% url 'checkout' %}" method="POST" id="payment-form">
                 {% csrf_token %}
+                <input type="hidden" value="{{ total }}" name="total">
                 <fieldset class="rounded px-3 mb-5">
                     <legend class="fieldset-label small px-2 w-auto">Details</legend>
                     {{ order_form.full_name | as_crispy_field }}
@@ -62,8 +63,8 @@
                     {{ order_form.postcode | as_crispy_field }}
                     {{ order_form.country | as_crispy_field }}
                     <div class="form-check form-check-inline float-right mr-0">
-                        <label class="form-check-label" for="id-save-info">Save this address information to my profile</label>
-                        <input class="form-check-input ml-2 mr-0" type="checkbox" id="id-save-info" name="save-info" checked>
+                        <label class="form-check-label" for="id-save_info">Save this address information to my profile</label>
+                        <input class="form-check-input ml-2 mr-0" type="checkbox" id="id-save_info" name="save_info" checked>
                     </div>
                 </fieldset>
                 <fieldset class="px-3">
@@ -96,6 +97,32 @@
                     </p>
                 </div>
             </form>
+            {% if show_develop_buy %}
+            <form action="{% url 'checkout' %}" method="POST" id="develop-form">
+                {% csrf_token %}
+                <input type="hidden" value="develop" name="develop-buy">
+                <input type="hidden" value="" id="dev_full_name" name="full_name">
+                <input type="hidden" value="" id="dev_email" name="email">
+                <input type="hidden" value="" id="dev_phone_number" name="phone_number">
+                <input type="hidden" value="" id="dev_postcode" name="postcode">
+                <input type="hidden" value="" id="dev_town_or_city" name="town_or_city">
+                <input type="hidden" value="" id="dev_street_address1" name="street_address1">
+                <input type="hidden" value="" id="dev_street_address2" name="street_address2">
+                <input type="hidden" value="" id="dev_county" name="county">
+                <input type="hidden" value="" id="dev_country" name="country">
+                <input type="hidden" value="" id="dev_save_info" name="save_info">
+                <input type="hidden" value="" id="dev_client_secret" name="client_secret">
+                <input type="hidden" value="{{ total }}" name="total">
+                <div class="submit-button text-right mt-5 mb-2">
+                    <button type="submit" class="btn btn-outline-danger ml-3" id="develop-submit">
+                        <span class="font-weight-bold">Complete Without Stripe</span>
+                        <span class="icon">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                    </button>
+                </div>
+            </form>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -113,4 +140,8 @@
     {{ stripe_public_key|json_script:"id_stripe_public_key" }}
     {{ client_secret|json_script:"id_client_secret" }}
     <script src="{% static 'checkout/js/stripe_elements.js' %}"></script>
+
+    {% if show_develop_buy %}
+    <script src="{% static 'checkout/js/dev_submit.js' %}"></script>
+    {% endif %}
 {% endblock %}
